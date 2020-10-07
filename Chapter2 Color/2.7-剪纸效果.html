@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      background: #eee;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="radios">
+
+  </div>
+  <canvas id="canvas" width="800" height="500"></canvas>
+  <script>
+    const canvas = document.querySelector('#canvas')
+    const ctx = canvas.getContext('2d')
+
+    function drawGrid(context, color, stepx, stepy) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 0.5;
+
+      for (var i = stepx + 0.5; i < ctx.canvas.width; i += stepx) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, ctx.canvas.height);
+        ctx.stroke();
+      }
+
+      for (var i = stepy + 0.5; i < ctx.canvas.height; i += stepy) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(ctx.canvas.width, i);
+        ctx.stroke();
+      }
+    }
+
+    function drawTwoArcs() {
+      ctx.beginPath()
+      ctx.arc(300, 190, 150, 0, Math.PI * 2, false)
+      ctx.arc(300, 190, 100, 0, Math.PI * 2, true)
+
+      // 这里巧妙的利用了非零环绕原则 + path + 顺逆时针的概念，
+      // 形成了一个剪纸的效果，如果想要看出区别，可以closePath + fill试试
+
+      ctx.fill()
+      ctx.shadowColor = undefined
+      ctx.shadowOffsetX = 0
+      ctx.shadowoffsetY = 0
+      ctx.stroke()
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      drawGrid('lightgray', 10, 10)
+      ctx.save()
+
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)'
+      ctx.shadowOffsetX = 12
+      ctx.shadowoffsetY = 12
+      ctx.shadowBlur = 15
+
+      drawTwoArcs()
+      ctx.restore()
+    }
+
+    ctx.fillStyle = 'rgba(100, 140, 230, 0.5)'
+    ctx.strokeStyle = ctx.fillStyle
+    draw()
+
+  </script>
+</body>
+
+</html>

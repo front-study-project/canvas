@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      background: #eee;
+      border: thin solid cornflowerblue;
+    }
+    #radios {
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="radios">
+    
+  </div>
+  <canvas id="canvas" width="800" height="500"></canvas>
+  <script>
+    const canvas = document.querySelector('#canvas')
+    const ctx = canvas.getContext('2d')
+    
+    function stroke() {
+      ctx.font = '40px STheiti, SimHei'
+      let m = ctx.measureText('Stroke')
+      ctx.beginPath()
+      ctx.strokeText('Stroke', 20, 60)
+      ctx.strokeRect(20, 60 + 40, m.width, 40)
+      ctx.arc(60, 200, 40, 0, Math.PI * 3 / 2)
+      ctx.stroke()
+      ctx.closePath()
+
+      ctx.beginPath()
+      ctx.arc(60, 300, 40, 0, Math.PI * 3 / 2)
+      ctx.closePath()
+      ctx.stroke()
+      ctx.closePath()
+    }
+    
+    function fill() {
+      ctx.font = '40px STheiti, SimHei'
+      let m = ctx.measureText('Fill')
+      ctx.beginPath()
+      ctx.fillText('Fill', 320, 60)
+      ctx.fillRect(320, 60 + 40, m.width, 40)
+      ctx.arc(340, 200, 40, 0, Math.PI * 3 / 2)
+      ctx.fill()
+      ctx.closePath()
+
+      ctx.beginPath()
+      ctx.arc(340, 300, 40, 0, Math.PI * 3 / 2)
+      ctx.closePath()
+      ctx.fill()
+      ctx.closePath()
+    }
+
+    stroke()
+    fill()
+
+  </script>
+</body>
+</html>
