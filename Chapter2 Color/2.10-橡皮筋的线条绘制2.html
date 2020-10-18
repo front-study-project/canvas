@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      background-color: #eee;
+    }
+    #controls {
+      position: absolute;
+      left: 25px;
+      top: 25px;
+    }
+    #canvas {
+      background: #fff;
+      cursor: pointer;
+      margin-left: 10px;
+      margin-top: 10px;
+      box-shadow: 4px 4px 8px rgba(0, 0, 0, .5);
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas" width="600" height="400"></canvas>
+  <div id="controls">
+    Stoke Color:
+    <select id="strokeStyleSelect">
+      <option value="red">red</option>
+      <option value="green">green</option>
+      <option value="blue">blue</option>
+      <option value="orange">orange</option>
+    </select>
+    Guidewires:
+    <input type="checkbox" id="guideWireCheckbox" checked>
+    <input type="button" id="eraseAllButton" value="Erase all">
+  </div>
+
+  <script src="../utils.js"></script>
+  <script>
+    /**
+     * 几个功能点
+     *  1、支持画笔变色
+     *  2、支持启用辅助线功能
+     *  3、支持清除画布
+     *  4、支持绘制
+     */
+    const canvas = document.querySelector('#canvas')
+    const ctx = canvas.getContext('2d')
+    const width = canvas.width
+    const height = canvas.height
+    let eraseAllButton = document.querySelector('#eraseAllButton'),
+        guidewireCheckbox = document.querySelector('#guideWireCheckbox'),
+        strokeStyleSelect = document.querySelector('#strokeStyleSelect'),
+        drawingSurfaceImageData = null,
+        mousedown = {}, // mousedonw记录点击时鼠标在canvas中的坐标（转换了）
+        rubberbandRect = {},
+        dragging = false,
+        guidewires = guidewireCheckbox.checked
+    
+      
+    guidewireCheckbox.onchange = function() {
+      guidewires = guidewireCheckbox.checked
+    }
+    strokeStyleSelect.onchange = function() {
+      ctx.strokeStyle = strokeStyleSelect.value
+    }
+    eraseAllButton.onclick = function() {
+      drawGrid(ctx)
+      ctx.clearRect(0, 0, width, height)
+    }
+
+    // 绘制辅助线，x和y轴
+    function drawGuideWires(ctx, x, y) {
+      ctx.save()
+      ctx.strokeStyle = 'rgba(0, 0, 230, .4)'
+      ctx.lineWidth = 0.5
+      function drawHorizonalLine(y) {
+        ctx.beginPath()
+        ctx.moveTo(0, y)
+        ctx.lineTo(ctx.canvas.width, y)
+        ctx.stroke()
+      }
+      function drawVerticalLine(x) {
+        ctx.beginPath()
+        ctx.moveTo(x, 0)
+        ctx.lineTo(x, ctx.canvas.height)
+        ctx.stroke()
+      }
+      drawVerticalLine(x)
+      drawHorizonalLine(y)
+      ctx.restore()
+    }
+
+    function drawLine(loc) {
+      ctx.beginPath()
+      ctx.strokeStyle = strokeStyleSelect.value
+      ctx.moveTo(mousedown.x, mousedown.y)
+      ctx.lineTo(loc.x, loc.y)
+      ctx.stroke()
+    }
+
+    /* Canvas Handler */
+    canvas.onmousedown = function(e) {
+      e.preventDefault()
+      let loc = windowToCanvas(canvas, e.clientX, e.clientY)
+      mousedown.x = loc.x
+      mousedown.y = loc.y
+      dragging = true
+      drawingSurfaceImageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    }
+    
+    canvas.onmousemove = function(e) {
+      e.preventDefault()
+      if (dragging) {
+        let loc = windowToCanvas(canvas, e.clientX, e.clientY)
+        ctx.putImageData(drawingSurfaceImageData, 0, 0)
+        drawLine(loc)
+        if (guidewires) {
+          drawGuideWires(ctx, loc.x, loc.y)
+        }
+      }
+    }
+
+    canvas.onmouseup = function(e) {
+      e.preventDefault()
+      let loc = windowToCanvas(canvas, e.clientX, e.clientY)
+      // drawingSurfaceImageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      ctx.putImageData(drawingSurfaceImageData, 0, 0)
+      drawLine(loc)
+      dragging = false
+    }
+    drawGrid(ctx)
+    
+  </script>
+  
+</body>
+
+</html>
