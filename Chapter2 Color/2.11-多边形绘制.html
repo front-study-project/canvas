@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #canvas {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="500"></canvas>
+  <script src="../utils.js"></script>
+  <script>
+    const canvas = document.querySelector('#canvas')
+    const ctx = canvas.getContext('2d')
+
+    let Point = function(x, y) {
+      this.x = x
+      this.y = y
+    }
+
+    function getPolygonPoints(centerX, centerY, radius, sides, startAngle) {
+      let points = []
+      let angle = startAngle || 0
+      for (let i = 0; i < sides; i++) {
+        points.push(
+          new Point(
+            centerX + radius * Math.sin(angle),
+            centerY - radius * Math.cos(angle)
+          )
+        )
+        angle += 2 * Math.PI / sides
+      }
+      return points
+    }
+
+    function createPolygon(centerX, centerY, radius, sides, startAngle) {
+      let points = getPolygonPoints(centerX, centerY, radius, sides, startAngle)
+      console.log(points)
+      ctx.beginPath()
+      ctx.moveTo(points[0].x, points[0].y)
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y)
+      }
+      ctx.closePath()
+    }
+
+    ctx.strokeStyle = '#000'
+    createPolygon(300, 300, 50, 5, 0)
+    ctx.stroke()
+    drawGrid(ctx)
+  </script>
+</body>
+</html>
