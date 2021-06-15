@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <canvas id="canvas" width="500" height="500"></canvas>
+  <div></div>
+  <canvas id="canvas2" width="500" height="500"></canvas>
+  <!-- <script>
+    const canvas = document.querySelector('#canvas')
+    const ctx = canvas.getContext('2d')
+    const image = new Image();
+    image.src = "./dragon.jpg";
+    image.onload = function () {
+      canvas.width = image.width;
+      canvas.height = image.height;
+      
+      ctx.drawImage(image, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, image.width, image.height).data
+
+      ctx.clearRect(0, 0, image.width, image.height)
+
+      const gap = 10
+
+      for (let h = 0; h < image.height; h += gap) {
+        for (let w = 0; w < image.width; w += gap) {
+          let position = (image.width * h + w) * 4
+          let r = imageData[position],
+              g = imageData[position + 1],
+              b = imageData[position + 2]
+            
+          if (r + g + b == 0) {
+            ctx.fillStyle = '#000'
+            ctx.fillRect(w, h, 4, 4)
+          }
+        }
+      }
+    }
+
+  </script> -->
+  <script>
+    function onOpenCVLoad() {
+      
+      cv['onRuntimeInitialized'] = () => {
+        const canvas = document.querySelector('#canvas')
+        const ctx = canvas.getContext('2d')
+        const image = new Image();
+        image.src = './bingbing.jpg'
+        image.onload = () => {
+          let src = cv.imread(image);
+          cv.imshow('canvas', src);
+          // let dst = cv.Mat.zeros(src.cols, src.rows, cv.CV_8UC3);
+          let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+          cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+          // cv.threshold(src, src, 120, 200, cv.THRESH_BINARY);
+          cv.threshold(src, src, 100, 255, cv.THRESH_BINARY);
+          let contours = new cv.MatVector();
+          let hierarchy = new cv.Mat();
+
+          cv.findContours(src, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
+
+          for (let i = 0; i < contours.size(); ++i) {
+            let color = new cv.Scalar(Math.round(Math.random() * 255), Math.round(Math.random() * 255),
+                                      Math.round(Math.random() * 255));
+            cv.drawContours(dst, contours, i, color, 1, cv.LINE_8, hierarchy, 100);
+          }
+
+          cv.imshow('canvas2', dst);
+          src.delete(); dst.delete(); contours.delete(); hierarchy.delete();
+        }
+      }
+    }
+    // 反差rgba
+    function reverseImageRGB(data) {
+      for (let i = 0; i < data.length; i += 4) {
+        data[i] = 255 - data[i]
+        data[i + 1] = 255 - data[i + 1]
+        data[i + 2] = 255 - data[i + 2]
+        data[i + 3] = 255
+      }
+    }
+  </script>
+  <script src="./opencv.js" async onload="onOpenCVLoad()"></script>
+</body>
+
+</html>
