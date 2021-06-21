@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>进度条</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .process-bar-wrapper {
+      position: relative;
+      width: 440px;
+      height: 30px;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .finish-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 0 10px;
+      height: 100%;
+      background-color: #ccccff;
+      box-sizing: border-box;
+    }
+    .block-item {
+      display: inline-block;
+      width: 15px;
+      height: 100%;
+      margin: 0 4px;
+      background-color: skyblue;
+      transform: skew(145deg);
+    }
+    .unfinished-bar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 99%;
+      height: 100%;
+      background-color: #ccccff;
+      animation: 20s infinite process;
+    }
+    @keyframes process {
+      0% {
+        width: 99%;
+      }
+      100% {
+        width: 0%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="process-bar-wrapper">
+    <div class="finish-bar">
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+      <div class="block-item"></div>
+    </div>
+    <div class="unfinished-bar"></div>
+  </div>
+</body>
+</html>
