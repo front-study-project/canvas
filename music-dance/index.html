@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Dance</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+    }
+    #canvas {
+      position: relative;
+      /* width: 100%;
+      height: 100%; */
+    }
+
+    #file {
+      display: none;
+    }
+
+    .load-wrapper {
+      position: absolute;
+      width: 100%;
+      left: 50%;
+      text-align: center;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="load-wrapper">
+    <button id="btn">Load Music</button>
+    <input id="file" type="file">
+  </div>
+  <canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
+  <script src="./canvas.js"></script>
+  <script>
+    const size = 128
+    let btn = document.querySelector('#btn')
+    let file = document.querySelector('#file')
+    const ac = new AudioControl({ size })
+    const mc = new MusicControl({ target: '#canvas'})
+
+    const handleBtnClick = (e) => {
+      file.click()
+    }
+
+    const handleFileUploadChange = (e) => {
+      const mp3 = e.target.files[0]
+      const fr = new FileReader()
+
+      fr.onload = (e) => {
+        const result = e.target.result
+        ac.decodeAudioData(result)
+          .then(buffer => {
+            const analyserNode = ac.analyserNode
+            const arr = new Uint8Array(size)
+            ac.start(buffer)
+            const loop = () => {
+              analyserNode.getByteFrequencyData(arr)
+              mc.draw(arr)
+              requestAnimationFrame(loop)
+            }
+            loop()
+          })
+      }
+      fr.readAsArrayBuffer(mp3)
+    }
+    
+
+    mc.draw([100, 222, 123, 222])
+    btn.addEventListener('click', handleBtnClick)
+    file.addEventListener('change', handleFileUploadChange)
+  </script>
+</body>
+</html>
