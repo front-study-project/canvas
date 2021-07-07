@@ -38,12 +38,21 @@ class MusicControl {
     this.ctx = this.canvas.getContext('2d')
     this.w = this.canvas.width
     this.h = this.canvas.height
+    this.setLinearGradientStyle()
   }
   drawPanel() {}
 
   draw(data = []) {
     this.data = data
     this.drawRectangle()
+  }
+  
+  setLinearGradientStyle() {
+    const line = this.ctx.createLinearGradient(0,0,0, this.canvas.height);//线性渐变
+    line.addColorStop(0, 'red');
+    line.addColorStop(0.5, 'orange');
+    line.addColorStop(1, 'green');
+    this.ctx.fillStyle = line
   }
 
   drawRectangle() {
@@ -57,9 +66,10 @@ class MusicControl {
     for (let i = 0; i < source.length; i++) {
       let cur = source[i]
       let h = cur / max * this.h
+      const turnY = this.h - h
       ctx.beginPath()
-      ctx.fillStyle = 'red'
-      ctx.fillRect(x, y, width, h)
+      // ctx.fillRect(x, y, width, h)
+      ctx.fillRect(x, turnY, width, h)
       x = x + space
       ctx.closePath()
     }
