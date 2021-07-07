@@ -1,4 +1,8 @@
 const max = 256
+const config = {
+  width: 10, // 柱体宽度
+  space: 15, // 柱体间间距
+}
 
 class AudioControl {
   constructor({ size }) {
@@ -27,10 +31,13 @@ class AudioControl {
 
 class MusicControl {
   constructor({ target }) {
-    this.canvas = document.querySelector(target)
+    const canvas = document.querySelector(target)
+    this.canvas = canvas
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
     this.ctx = this.canvas.getContext('2d')
-    this.w = this.canvas.clientWidth
-    this.h = this.canvas.clientHeight
+    this.w = this.canvas.width
+    this.h = this.canvas.height
   }
   drawPanel() {}
 
@@ -44,6 +51,7 @@ class MusicControl {
     const ctx = this.ctx
     ctx.clearRect(0, 0, this.w, this.h)
     const source = this.data
+    const { width, space } = config
     let x = 0
     let y = 0
     for (let i = 0; i < source.length; i++) {
@@ -51,10 +59,8 @@ class MusicControl {
       let h = cur / max * this.h
       ctx.beginPath()
       ctx.fillStyle = 'red'
-      console.log(h / 2)
-      ctx.fillRect(x, 0, 1, h)
-      // ctx.fillRect(x, y, 1, h)
-      x = x + 5
+      ctx.fillRect(x, y, width, h)
+      x = x + space
       ctx.closePath()
     }
   }
