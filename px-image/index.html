@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图片像素化</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      background-color: #99CCCC;
+    }
+    .canvas-wrapper {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .inner-canvas-wrapper {
+      background-color: #fff;
+      border: 1px solid #f2f2f2;
+      box-shadow: -4px -4px 4px #999;
+    }
+  </style>
+</head>
+<body>
+  <input style="display: none;" id="fileUpload" type="file">
+  <div class="canvas-wrapper">
+    <div class="inner-canvas-wrapper">
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
+  <script src="./js/dat.gui.min.js"></script>
+  <script src="./js/init-datGui.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>
