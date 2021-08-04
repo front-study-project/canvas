@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>绘制海报 - 画布</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .page-wrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .canvas-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 50px;
+      background-color: #fff;
+    }
+
+    .canvas-wrapper img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .canvas-child-wrapper {
+      box-sizing: border-box;
+    }
+
+    .canvas-child-wrapper.active {
+      border: 2px dashed skyblue;
+    }
+
+    .menu-wrapper {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      background-color: #f2f2f2;
+      color: #464242;
+      font-weight: bold;
+    }
+    .menu-text {
+      flex: 1;
+      padding: 15px 0;
+      text-align: center;
+      border-right: 1px solid #c7c7c7;
+    }
+
+    .menu-text:last-child {
+      border-right: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div id="wrapper" class="canvas-wrapper">
+    </div>
+    <div class="menu-wrapper">
+      <div class="menu-text" onclick="back()">后退</div>
+      <div class="menu-text" onclick="forward()">前进</div>
+      <div class="menu-text" onclick="upload()">上传</div>
+      <div class="menu-text">文本</div>
+      <div class="menu-text" onclick="generateExport()">导出</div>
+    </div>
+  </div>
+  <script src="./html2canvas.js"></script>
+  <script src="./controller.js"></script>
+  <script>
+    const wrapper = document.querySelector('#wrapper')
+    const ct = new Controller()
+    const record = []
+
+    wrapper.addEventListener('click', (e) => {
+      const dom = record.find(item => item.el === e.target)
+      record.forEach(e => {
+        if (e.el.className) {
+          e.el.className = e.el.className.replace(' active', '')
+        }
+      })
+      dom.el.className += ' active'
+      console.log(dom)
+    })
+    
+    function back() {
+      ct.back()
+    }
+    function forward() {
+      ct.forward()
+    }
+    function save(data) {
+      ct.save(data)
+    }
+
+    function upload() {
+      let input = document.createElement('input')
+      input.setAttribute('type', 'file')
+      input.onchange = (e) => {
+        const file = e.target.files[0]
+        const url = URL.createObjectURL(file)
+        const img = createEle('img')
+        img.src = url
+        wrapper.appendChild(img)
+        record.push({
+          el: img,
+          type: 'image',
+          src: url,
+          key: Date.now(),
+          width: '',
+          height: '',
+          text: ''
+        })
+        save(record)
+        document.body.removeChild(input)
+      }
+      input.style.display = 'none'
+      document.body.appendChild(input)
+      input.click()
+    }
+
+    function createEle(tag) {
+      const dom = document.createElement(tag)
+      dom.className = 'canvas-child-wrapper'
+      return dom
+    }
+
+    function generateExport() {
+      html2canvas(wrapper)
+        .then(canvas => {
+          const a = document.createElement('a')
+          a.download = '导出.png'
+          a.href = canvas.toDataURL()
+          a.target = '_blank'
+          a.click()
+        })
+    }
+  </script>
+</body>
+</html>

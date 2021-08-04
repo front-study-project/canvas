@@ -54,7 +54,8 @@ class Lottery {
       ctx.moveTo(centerX, centerY)
       const award = awards[i]
       const { text, type } = award
-      ctx.fillStyle = getRandomColor()
+      // ctx.fillStyle = getRandomColor()
+      ctx.fillStyle = '#ddd'
       ctx.arc(centerX, centerY, 90, start, start + per)
       ctx.fill()
       start = start + per
@@ -67,6 +68,14 @@ class Lottery {
       ctx.lineWidth = 5
       ctx.lineTo(moveX, moveY)
       ctx.fill()
+      ctx.closePath()
+
+      ctx.beginPath()
+      ctx.moveTo(centerX, centerY)
+      ctx.lineWidth = 1
+      ctx.lineTo(centerX + 90, centerY)
+      ctx.strokeStyle = '#f9e3bb'
+      ctx.stroke()
       ctx.closePath()
     }
   }
@@ -88,6 +97,10 @@ const config = {
     { id: 1002, text: 'Ipad pro 2020', type: '二等奖' },
     { id: 1003, text: 'Iphone手机', type: '三等奖' },
     { id: 1004, text: 'Iphone 定制火影手机壳', type: '' },
+    { id: 1005, text: '阳光普照奖', type: '' },
+    { id: 1005, text: '阳光普照奖', type: '' },
+    { id: 1005, text: '阳光普照奖', type: '' },
+    { id: 1005, text: '阳光普照奖', type: '' },
     { id: 1005, text: '阳光普照奖', type: '' },
   ],
   duration: 3000,
