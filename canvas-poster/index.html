@@ -71,7 +71,7 @@
       <div class="menu-text" onclick="back()">后退</div>
       <div class="menu-text" onclick="forward()">前进</div>
       <div class="menu-text" onclick="upload()">上传</div>
-      <div class="menu-text">文本</div>
+      <div class="menu-text" onclick="text()">文本</div>
       <div class="menu-text" onclick="generateExport()">导出</div>
     </div>
   </div>
@@ -83,24 +83,47 @@
     const record = []
 
     wrapper.addEventListener('click', (e) => {
-      const dom = record.find(item => item.el === e.target)
-      record.forEach(e => {
-        if (e.el.className) {
-          e.el.className = e.el.className.replace(' active', '')
+      if (e.target) {
+        const dom = record.find(item => item.el === e.target)
+        if (dom) {
+          record.forEach(e => {
+            if (e.el.className) {
+              e.el.className = e.el.className.replace(' active', '')
+            }
+          })
+          dom.el.className += ' active'
         }
-      })
-      dom.el.className += ' active'
-      console.log(dom)
+      }
     })
     
     function back() {
       ct.back()
     }
+    
     function forward() {
       ct.forward()
     }
+    
     function save(data) {
       ct.save(data)
+    }
+
+    function text() {
+      let t = window.prompt('请输入文本')
+      if (t) {
+        let div = createEle('div')
+        div.innerText = t
+        div.style.display = 'inline-block'
+        record.push({
+          el: div,
+          type: 'text',
+          key: Date.now(),
+          width: '',
+          height: '',
+          text: t
+        })
+        wrapper.appendChild(div)
+      }
     }
 
     function upload() {
